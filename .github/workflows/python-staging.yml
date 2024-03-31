@@ -12,6 +12,14 @@ on:
       app-manifests:
         required: true
         type: string
+      skiptests:
+        required: false
+        type: boolean
+        default: false
+      skiplint:
+        required: false
+        type: boolean
+        default: false
     secrets:
       DOCKERHUB_USERNAME:
         required: true
@@ -22,6 +30,8 @@ on:
 
 jobs:
   lint:
+    if: ${{ ! inputs.skiplint }}
+
     runs-on: ubuntu-latest
 
     steps:
@@ -34,6 +44,8 @@ jobs:
       run: docker run --rm ${{ inputs.service-name }}-lint
 
   tests:
+    if: ${{ ! inputs.skiptests }}
+
     runs-on: ubuntu-latest
 
     steps:
