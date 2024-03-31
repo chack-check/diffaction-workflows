@@ -59,6 +59,7 @@ jobs:
 
   build:
     needs: [ tests, lint ]
+    if: (needs.tests.result == 'skipped' || needs.tests.result == 'success') && (needs.lint.result == 'skipped' || needs.lint.result == 'success')
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -81,7 +82,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    needs: [ tests, lint, build ]
+    needs: [ build ]
     name: Deploy
     runs-on: ubuntu-latest
     steps:
