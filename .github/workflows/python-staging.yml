@@ -115,7 +115,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.service-name }}:${{ github.sha }}
 
   update-mesh:
-    needs: [ tests, lint, build ]
+    needs: [ deploy ]
     runs-on: ubuntu-latest
     steps:
       - name: Refresh graphql-mesh front-end service
