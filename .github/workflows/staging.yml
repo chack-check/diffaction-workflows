@@ -20,12 +20,17 @@ on:
         required: false
         type: boolean
         default: false
+      run-tests-command:
+        required: true
+        type: string
     secrets:
       DOCKERHUB_USERNAME:
         required: true
       DOCKERHUB_TOKEN:
         required: true
       KUBERNETES_SECRET:
+        required: true
+      CLIENT_SERVICE_PAT:
         required: true
 
 jobs:
@@ -55,7 +60,7 @@ jobs:
       run: docker compose -f docker-compose.test.yml build
 
     - name: Run tests
-      run: docker compose -f docker-compose.test.yml run --rm app poetry run pytest
+      run: docker compose -f docker-compose.test.yml run --rm app ${{ inputs.run-tests-command }}
 
   build:
     needs: [ tests, lint ]
