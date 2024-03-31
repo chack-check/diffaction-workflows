@@ -86,6 +86,7 @@ jobs:
 
   deploy:
     needs: [ build ]
+    if: always() && needs.build.result == 'success'
     name: Deploy
     runs-on: ubuntu-latest
     steps:
