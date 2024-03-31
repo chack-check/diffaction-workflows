@@ -59,7 +59,10 @@ jobs:
 
   build:
     needs: [ tests, lint ]
-    if: (needs.tests.result == 'skipped' || needs.tests.result == 'success') && (needs.lint.result == 'skipped' || needs.lint.result == 'success')
+    if: |
+      always() &&
+      (needs.tests.result == 'skipped' || needs.tests.result == 'success') &&
+      (needs.lint.result == 'skipped' || needs.lint.result == 'success')
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
