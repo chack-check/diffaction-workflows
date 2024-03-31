@@ -100,6 +100,7 @@ jobs:
 
   update-mesh:
     needs: [ tests, lint, build ]
+    runs-on: ubuntu-latest
     steps:
       - name: Refresh graphql-mesh front-end service
         run: |
