@@ -1,0 +1,49 @@
+name: Main Diffaction workflow
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        required: true
+        type: string
+      app-dependencies-manifests:
+        required: false
+        type: string
+      app-manifests:
+        required: true
+        type: string
+    secrets:
+      KUBERNETES_SECRET:
+        required: true
+      DOCKERHUB_USERNAME:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set the kubernetes context
+        uses: azure/k8s-set-context@v2
+        with:
+          method: service-account
+          k8s-url: https://master.k8s.chack-check.ru:6443
+          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Deploy app dependencies
+        if: inputs.app-dependencies-manifests != ''
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: stage
+          manifests: ${{ inputs.app-dependencies-manifests }}
+
+      - name: Deploy app
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: stage
+          manifests: ${{ inputs.app-manifests }}
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.service-name }}:${{ github.sha }}
