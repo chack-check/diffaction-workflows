@@ -28,9 +28,9 @@ on:
         required: true
       DOCKERHUB_TOKEN:
         required: true
-      KUBERNETES_CONTEXT:
+      KUBERNETES_URL:
         required: true
-      KUBERNETES_CONFIG:
+      KUBERNETES_SECRET:
         required: true
       CLIENT_SERVICE_PAT:
         required: true
@@ -100,9 +100,9 @@ jobs:
       - name: Set the kubernetes context
         uses: azure/k8s-set-context@v2
         with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBERNETES_CONFIG }}
-          context: ${{ secrets.KUBERNETES_CONTEXT }}
+          method: service-account
+          k8s-url: ${{ secrets.KUBERNETES_URL }}
+          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
 
       - name: Checkout source code
         uses: actions/checkout@v3
