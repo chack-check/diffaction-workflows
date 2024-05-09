@@ -1,0 +1,49 @@
+on:
+  workflow_call:
+    inputs:
+      namespace:
+        required: true
+        type: string
+      image-name:
+        required: true
+        type: string
+      deployment-path:
+        required: true
+        type: string
+      service-path:
+        required: true
+        type: string
+      ingress-path:
+        required: true
+        type: string
+    secrets:
+      kubernetes-secret:
+        required: true
+      docker-username:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy To Kubernetes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set the kubernetes context
+        uses: azure/k8s-set-context@v2
+        with:
+          method: service-account
+          k8s-url: https://master.k8s.chack-check.ru:6443
+          k8s-secret: ${{ secrets.kubernetes-secret }}
+
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Deploy app
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: ${{ inputs.namespace }}
+          manifests: |
+            ${{ inputs.deployment-path }}
+            ${{ inputs.service-path }}
+            ${{ inputs.ingress-path }}
+          images: |
+            ${{ secrets.docker-username }}/${{ inputs.image-name }}:${{ github.sha }}
