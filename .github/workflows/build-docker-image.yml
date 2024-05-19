@@ -4,6 +4,9 @@ on:
       image-name:
         required: true
         type: string
+      target:
+        required: true
+        type: string
     secrets:
       docker-username:
         required: true
@@ -27,6 +30,8 @@ jobs:
       - name: Build and push the docker image
         uses: docker/build-push-action@v3
         with:
+          context: .
+          target: ${{ inputs.target }}
           push: true
           tags: |
             ${{ secrets.docker-username }}/${{ inputs.image-name }}:latest
