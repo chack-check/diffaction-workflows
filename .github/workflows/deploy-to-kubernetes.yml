@@ -30,7 +30,7 @@ jobs:
       - name: Set the kubernetes context
         uses: azure/k8s-set-context@v2
         with:
-          method: service-account
+          method: kubeconfig
           k8s-url: https://master.k8s.chack-check.ru:6443
           k8s-secret: ${{ secrets.kubernetes-secret }}
 
