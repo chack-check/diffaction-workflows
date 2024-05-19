@@ -30,7 +30,6 @@ jobs:
       - name: Build and push the docker image
         uses: docker/build-push-action@v3
         with:
-          context: .
           target: ${{ inputs.target }}
           push: true
           tags: |
