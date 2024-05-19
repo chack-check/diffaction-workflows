@@ -31,8 +31,7 @@ jobs:
         uses: azure/k8s-set-context@v2
         with:
           method: kubeconfig
-          k8s-url: https://master.k8s.chack-check.ru:6443
-          k8s-secret: ${{ secrets.kubernetes-secret }}
+          kubeconfig: ${{ secrets.kubernetes-secret }}
 
       - name: Checkout source code
         uses: actions/checkout@v3
