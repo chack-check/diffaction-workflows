@@ -132,3 +132,11 @@ jobs:
           -H "Authorization: token ${{ secrets.CLIENT_SERVICE_PAT }}" \
           --data '{"ref": "main"}' \
           https://api.github.com/repos/chack-check/client-diffaction-service/actions/workflows/cicd-stage.yml/dispatches
+
+  e2e:
+    needs: [ update-mesh ]
+    if: always() && needs.update-mesh.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        run: docker run artemowkin/diffaction-e2e
