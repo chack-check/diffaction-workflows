@@ -1,0 +1,39 @@
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        required: true
+        type: string
+      target:
+        required: true
+        type: string
+    secrets:
+      docker-username:
+        required: true
+      docker-token:
+        required: true
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.docker-username }}
+          password: ${{ secrets.docker-token }}
+
+      - name: Build and push the docker image
+        uses: docker/build-push-action@v3
+        with:
+          target: ${{ inputs.target }}
+          push: true
+          tags: |
+            ${{ secrets.docker-username }}/${{ inputs.image-name }}:latest
+            ${{ secrets.docker-username }}/${{ inputs.image-name }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
