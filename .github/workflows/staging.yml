@@ -32,6 +32,16 @@ on:
         required: true
       CLIENT_SERVICE_PAT:
         required: true
+      TEST_USERNAME:
+        required: true
+      TEST_PASSWORD:
+        required: true
+      MAIL_HOST:
+        required: true
+      MAIL_LOGIN:
+        required: true
+      MAIL_PASSWORD:
+        required: true
 
 jobs:
   lint:
@@ -139,4 +149,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run tests
-        run: docker run artemowkin/diffaction-e2e
+        run: |
+          docker run -e TEST_USERNAME=${{ secrets.TEST_USERNAME }} \
+          -e TEST_PASSWORD=${{ secrets.TEST_PASSWORD }} \
+          -e MAIL_HOST=${{ secrets.MAIL_HOST }} \
+          -e MAIL_LOGIN=${{ secrets.MAIL_LOGIN }} \
+          -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
+          artemowkin/diffaction-e2e
